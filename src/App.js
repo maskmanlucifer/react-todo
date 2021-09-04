@@ -1,7 +1,10 @@
 import Header from './components/Header';
 import Task from './components/Task';
+import Addtask from './components/Addtask';
 import { useState } from "react";
 function App() {
+
+  const [showAddTask,setShowAddTask] = useState(false);
   const [tasks,setTasks] = useState([
     {
         id:1,
@@ -32,9 +35,21 @@ function App() {
    setTasks(tasks.map((task)=>(task.id===id ? {...task,reminder:!task.reminder} :task)));
   };
 
+  const addTask = (task) => {
+    const id = Math.floor(Math.random()*10000)+1;
+    let newTask={
+      id:id,
+      text:task.task,
+      day:task.dayntime,
+      reminder:task.reminder
+    };
+    setTasks([...tasks,newTask]);
+  };
+
   return (
     <div className="container">
-        <Header title="Task Tracker"/>
+        <Header title="Task Tracker" onAdd={()=>{setShowAddTask(!showAddTask)}} showAddTask={showAddTask}/>
+        {showAddTask && <Addtask addTask={addTask}/>}
         {tasks.length && <Task data={tasks} deleteTask={deleteTask} onToggle={toggleReminder}/>}
         {(!tasks.length) && <div>No tasks to show</div>}
     </div>
